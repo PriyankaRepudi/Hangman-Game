@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hangman Game</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: #f0f4f8;
+    padding: 40px 15px;
+}
+.game {
+    max-width: 400px;
+    margin: auto;
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px #ccc;
+}
+h1 { color: #4f46e5; }
+#word {
+    font-size: 28px;
+    letter-spacing: 8px;
+    margin: 25px 0;
+}
+input, button {
+    padding: 12px;
+    margin: 5px;
+    border-radius: 8px;
+}
+button {
+    background: #4f46e5;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+</style>
+</head>
+<body>
+<div class="game">
+<h1>🎮 Hangman Game</h1>
+<p>Guess the hidden word, one letter at a time!</p>
+<div id="word"></div>
+<p id="status">Wrong guesses: 0 / 6</p>
+<input id="letter" maxlength="1" placeholder="Enter a letter">
+<button onclick="guess()">Guess</button>
+<p id="message"></p>
+<button onclick="restart()">Play Again</button>
+</div>
+<script>
+const words = ["PYTHON", "COMPUTER", "PROGRAMMING", "GITHUB"];
+let word, guessed, wrong, finished;
+
+function restart() {
+    word = words[Math.floor(Math.random() * words.length)];
+    guessed = [];
+    wrong = [];
+    finished = false;
+    document.getElementById("message").textContent = "";
+    document.getElementById("letter").disabled = false;
+    render();
+}
+
+function render() {
+    document.getElementById("word").textContent =
+        [...word].map(c => guessed.includes(c) ? c : "_").join(" ");
+    document.getElementById("status").textContent =
+        "Wrong guesses: " + wrong.length + " / 6" +
+        (wrong.length ? " (" + wrong.join(", ") + ")" : "");
+}
+
+function guess() {
+    if (finished) return;
+    const input = document.getElementById("letter");
+    const letter = input.value.trim().toUpperCase();
+    input.value = "";
+
+    if (!/^[A-Z]$/.test(letter)) {
+        document.getElementById("message").textContent =
+            "Enter one alphabet letter.";
+        return;
+    }
+    if (guessed.includes(letter) || wrong.includes(letter)) {
+        document.getElementById("message").textContent =
+            "You already tried that letter!";
+        return;
+    }
+
+    if (word.includes(letter)) {
+        guessed.push(letter);
+    } else {
+        wrong.push(letter);
+    }
+
+    render();
+
+    if ([...word].every(c => guessed.includes(c))) {
+        document.getElementById("message").textContent =
+            "🎉 You won! The word was " + word;
+        finished = true;
+    } else if (wrong.length >= 6) {
+        document.getElementById("message").textContent =
+            "😢 Game over! The word was " + word;
+        finished = true;
+    } else {
+        document.getElementById("message").textContent = "";
+    }
+
+    if (finished) document.getElementById("letter").disabled = true;
+}
+
+document.getElementById("letter").addEventListener("keydown", e => {
+    if (e.key === "Enter") guess();
+});
+
+restart();
+</script>
+</body>
+</html>
