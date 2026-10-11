@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Hangman Game
 
 A simple console-based Hangman game using Python's `random` module, lists, sets, strings, loops, and conditional statements.
@@ -19,3 +20,7 @@ python main.py
 
 ## Concepts used
 `random`, lists, sets, strings, `while`, `if/elif/else`, input/output, functions.
+=======
+# Hangman-Game
+A simple text based Hangman Game built using python
+>>>>>>> b0000c5ae67eecf2483427524b5051e8fba509a4
